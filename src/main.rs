@@ -182,14 +182,19 @@ fn add(&mut self, new_elem : i32) {
 
 
         Some(node) =>   {
-                                                                 
-                        if new_elem > node.element { std::mem::swap (&mut new_elem , &mut node.element  ); }
 
-                        match direction {
-                                DIR::Right => node.right.add(new_elem.unwrap()),
-                                DIR::Left =>  node.left.add(new_elem.unwrap()) , 
-                                DIR::Nowhere => {},
-                            }
+                if node.element.is_none() { node.element = new_elem;} else {
+
+                    if new_elem > node.element { std::mem::swap (&mut new_elem , &mut node.element  ); }
+
+                    match direction {
+                            DIR::Right => node.right.add(new_elem.unwrap()),
+                            DIR::Left =>  node.left.add(new_elem.unwrap()) , 
+                            DIR::Nowhere => {},
+                        }
+
+                }
+                                                                 
                 },  
         }                                                                           
 }  
@@ -276,20 +281,32 @@ fn main () {
 
     heap.insert(34);
     heap.insert(43);
-
     heap.insert(95);
     heap.insert(777);
+    dbg!(heap.pop());
+    dbg!(heap.pop());
+    dbg!(heap.pop());
+    
     heap.insert(228);
+    heap.insert(17);
+    heap.insert(88);
+
+
+    dbg!(heap.pop());
+    dbg!(heap.pop());
+    dbg!(heap.pop());
+    dbg!(heap.pop());
+
+
+    heap.insert(1);
+    heap.insert(546);
     heap.insert(17);
     heap.insert(88);
 
     dbg!(heap.pop());
     dbg!(heap.pop());
-    dbg!(heap.pop());
 
-    dbg!(heap.pop());
-
-    // dbg!(heap);
+    dbg!(heap);
 
 
     
