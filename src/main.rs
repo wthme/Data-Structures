@@ -1,16 +1,16 @@
-#[derive(Debug)]
+
 struct Heap {
     root_heap: Tree,
     size_heap : u16,
 }
 
-#[derive(Debug)]
+
 struct Tree {
             root : Option<Box<Node>>, 
             size : u8,}
 
 
-#[derive(Debug)]            
+         
 struct Node{
     element : Option<i32>,
     left : Tree,
@@ -31,24 +31,6 @@ fn new() -> Tree {
     Tree{ root : None,
           size : 0,}
     }
-
-
-fn new_node(new_node : Node) -> Tree{
-
-      Tree    { root : Some(Box::new(new_node)), 
-                size : 0,}
- 
-}
-
-
-fn value(&self) -> Option<i32>{
-    if let Some(node) = &self.root{
-        node.element 
-    }
-    else  {None}
-}
-
-
 
 
 fn balance_dir(&self) -> DIR {
@@ -105,23 +87,18 @@ fn direction( &self ) -> DIR {
 
             Some(node) => {  
                     if node.left.size <= node.right.size {
-                        println!(" DIRTCTINON LEFT!!!");
+
                         DIR::Left
                     }
                     else {
-                        println!(" DIRTCTINON RIGHT!!!");
+
                         DIR::Right
                     }
                 },
 
-            _  =>    
-                    {  println!(" NOWHERE");
-                        DIR::Nowhere }
+            _  =>    DIR::Nowhere 
     }
 }
-
-
-
 
 
 fn balance(&mut self) {
@@ -209,10 +186,8 @@ fn remove (&mut self) -> Option<i32>{
     self.balance();
 
     removing_element
-}
 
-
-
+    }
 }
 
 
@@ -286,11 +261,6 @@ fn main () {
     dbg!(heap.pop());
     dbg!(heap.pop());
     dbg!(heap.pop());
-
     dbg!(heap.pop());
-
-    // dbg!(heap);
-
-
     
 }   
