@@ -33,12 +33,11 @@ fn new() -> Tree {
     }
 
 
-
 fn new_node(new_node : Node) -> Tree{
 
       Tree    { root : Some(Box::new(new_node)), 
                 size : 0,}
-    
+ 
 }
 
 
@@ -77,7 +76,7 @@ fn balance_dir(&self) -> DIR {
 
                             Some(right_node) =>  {
 
-                                if  Some(left_node.element) > Some(right_node.element) {DIR::Left} 
+                                if  left_node.element > right_node.element {DIR::Left} 
 
                                      else {DIR::Right}
                             },
@@ -85,18 +84,22 @@ fn balance_dir(&self) -> DIR {
                             None => DIR::Left,
 
                         }
+
+
                     }
                 }
             }
         }
+
         else {DIR::Nowhere}
     }
     else {DIR::Nowhere}
+
 }
 
 
 
-fn direction(&self ) -> DIR {
+fn direction( &self ) -> DIR {
 
     match &self.root {
 
@@ -109,12 +112,12 @@ fn direction(&self ) -> DIR {
                         println!(" DIRTCTINON RIGHT!!!");
                         DIR::Right
                     }
-            },
+                },
+
             _  =>    
                     {  println!(" NOWHERE");
                         DIR::Nowhere }
     }
-
 }
 
 
@@ -128,28 +131,31 @@ fn balance(&mut self) {
 
         DIR::Left  =>  {
 
-            
+            self.size -= 1;
+
             if let Some(node) = self.root.as_mut() {
 
-                   if let Some(node1) = &mut node.left.root{
-                        std::mem :: swap (&mut Some(node.element) , &mut Some(node1.element));
-                   }
+                   if let Some(node_left) = &mut node.left.root {
 
-                node.left.balance();
+                        std::mem :: swap (&mut node.element , &mut node_left.element);
+                        node.left.balance();
+                   }
+                   
             }
-            }
+        },
 
         DIR::Right =>  {
 
-                self.size -= 1;
+            self.size -= 1;
 
-                if let Some(node) = &mut self.root {
+            if let Some(node) = &mut self.root {
 
-                       if let Some(node1) = &mut node.right.root{
-                        std::mem :: swap (&mut Some(node.element) , &mut Some(node1.element));
+                    if let Some(node_right) = &mut node.right.root{
+
+                        std::mem :: swap (&mut node.element , &mut node_right.element);
+                        node.right.balance();
+
                        }
-
-                    node.right.balance();
                 }
         }
 
@@ -165,29 +171,47 @@ fn balance(&mut self) {
 
 fn add(&mut self, new_elem : i32) {
 
-    let mut new_elem = new_elem;
+    self.size +=1;
+    let mut new_elem = Some(new_elem);
     let direction = self.direction();
 
     match &mut self.root {
 
         
-        None =>  self.root = Some(Box::new(Node::new(new_elem))),
+        None =>  self.root = Some(Box::new(Node::new(new_elem.unwrap()))) ,
 
 
-        Some(node) =>    {
-                        
-                        self.size +=1;
-                        
-                        if new_elem > node.element.unwrap() { std::mem::swap (&mut new_elem , &mut node.element.unwrap()); }
+        Some(node) =>   {
+                                                                 
+                        if new_elem > node.element { std::mem::swap (&mut new_elem , &mut node.element  ); }
 
                         match direction {
-                                DIR::Right => node.right.add(new_elem),
-                                DIR::Left =>  node.left.add(new_elem) , 
+                                DIR::Right => node.right.add(new_elem.unwrap()),
+                                DIR::Left =>  node.left.add(new_elem.unwrap()) , 
                                 DIR::Nowhere => {},
                             }
                 },  
         }                                                                           
-}       
+}  
+
+
+
+
+fn remove (&mut self) -> Option<i32>{
+
+    let removing_element = match &mut self.root {
+
+        Some(node) => node.element.take() ,
+
+        None => None,
+    };
+
+    self.balance();
+
+    removing_element
+}
+
+
 
 }
 
@@ -220,21 +244,26 @@ fn insert(&mut self , new_elem : i32){
     }
 
 
+
+
 fn pop (&mut self) -> Option<i32> {
 
-    let mut pop_item = None; 
+let mut result = None;    
 
-        if let Some (node)  = &mut self.root_heap.root {
+if self.size_heap > 0  {
 
-            pop_item = node.element.take();
+    self.size_heap -=1;
 
-            self.root_heap.balance();
+    result =  match &mut self.root_heap.root {
 
-            dbg!(&self.root_heap.root);
-        }
+        Some (_) => self.root_heap.remove(),   
+        None => None,
+    };
+}
 
-    pop_item
- }
+result
+
+}
 
     
 }
@@ -245,15 +274,22 @@ fn main () {
   
     let mut  heap = Heap::new();
 
-    heap.insert(95);
+    heap.insert(34);
     heap.insert(43);
-    heap.insert(34);
+
+    heap.insert(95);
     heap.insert(777);
-    heap.insert(34);
+    heap.insert(228);
+    heap.insert(17);
+    heap.insert(88);
 
+    dbg!(heap.pop());
+    dbg!(heap.pop());
+    dbg!(heap.pop());
 
+    dbg!(heap.pop());
 
-    dbg!(heap);
+    // dbg!(heap);
 
 
     
